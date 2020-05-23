@@ -1,0 +1,70 @@
+{
+  "type": "AdaptiveCard",
+  "body": [
+    {
+      "type": "TextBlock",
+      "size": "Medium",
+      "weight": "Bolder",
+      "text": "${title} Rolled!"
+    },
+    {
+      "type": "ColumnSet",
+      "columns": [
+        {
+          "type": "Column",
+          "items": [
+            {
+              "type": "Image",
+              "url": "https://www.jamiesayer.co.uk/static/images/zombie/${dice1image}.png",
+              "size": "Small"
+            }
+          ],
+          "width": "auto"
+        },
+        {
+          "type": "Column",
+          "items": [
+            {
+              "type": "Image",
+              "url": "https://www.jamiesayer.co.uk/static/images/zombie/${dice2image}.png",
+              "size": "Small"
+            }
+          ],
+          "width": "auto"
+        },
+        {
+          "type": "Column",
+          "items": [
+            {
+              "type": "Image",
+              "url": "https://www.jamiesayer.co.uk/static/images/zombie/${dice3image}.png",
+              "size": "Small"
+            }
+          ],
+          "width": "auto"
+        }
+      ]
+    },
+    {
+      "type": "FactSet",
+      "facts": [
+        {
+          "title": "Brains Banked:",
+          "value": "${bankedbrains}"
+        },
+        {
+          "title": "Brains this round:",
+          "value": "${brainsthisround}"
+        },
+        {
+          "title": "Shotguns this round:",
+          "value": "${shotgunsthisround}"
+        }
+      ]
+    }
+  ],
+  "actions": [
+  ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.2"
+}
