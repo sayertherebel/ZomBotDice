@@ -100,7 +100,7 @@ namespace ZomBotDice.Dialogs
 
             if (!stepContext.Values.ContainsKey("gameid"))
             {
-                var prompt = MessageFactory.Text("What's the GameID?");
+                var prompt = MessageFactory.Text("What's the GameID? (Or say Cancel)");
                 var retryPromot = MessageFactory.Text("Please try again.");
                 return await stepContext.PromptAsync("gameidprompt", new PromptOptions { Prompt = prompt, RetryPrompt = retryPromot }, cancellationToken);
             }
@@ -114,7 +114,7 @@ namespace ZomBotDice.Dialogs
         {
             if (!stepContext.Values.ContainsKey("gameid")) { stepContext.Values["gameid"] = stepContext.Result.ToString().TrimStart('[').TrimEnd(']'); }
 
-            var prompt = MessageFactory.Text("What's your player name?");
+            var prompt = MessageFactory.Text("What's your player name? (Or say Cancel)");
                 var retryPromot = MessageFactory.Text("Please try again.");
                 return await stepContext.PromptAsync("nameprompt", new PromptOptions { Prompt = prompt, RetryPrompt = retryPromot }, cancellationToken);
 

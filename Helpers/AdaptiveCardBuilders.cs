@@ -15,7 +15,7 @@ namespace ZomBotDice.Helpers
     public static class AdaptiveCardBuilders
     {
 
-        public static async Task<AdaptiveCard> FromResult(ZomBotDice.Models.RollResult result)
+        public static async Task<AdaptiveCard> FromResult(ZomBotDice.Models.RoundResult result)
         {
             var assembly = Assembly.GetExecutingAssembly();
             var resourceName = "ZomBotDice.Cards.zombiecard.json";

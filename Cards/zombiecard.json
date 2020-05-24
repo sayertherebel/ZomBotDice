@@ -16,7 +16,7 @@
             {
               "type": "Image",
               "url": "https://www.jamiesayer.co.uk/static/images/zombie/${dice1image}.png",
-              "size": "Small"
+              "size": "Medium"
             }
           ],
           "width": "auto"
@@ -27,7 +27,7 @@
             {
               "type": "Image",
               "url": "https://www.jamiesayer.co.uk/static/images/zombie/${dice2image}.png",
-              "size": "Small"
+              "size": "Medium"
             }
           ],
           "width": "auto"
@@ -38,7 +38,7 @@
             {
               "type": "Image",
               "url": "https://www.jamiesayer.co.uk/static/images/zombie/${dice3image}.png",
-              "size": "Small"
+              "size": "Medium"
             }
           ],
           "width": "auto"

@@ -72,6 +72,7 @@
 
   <ItemGroup>
     <Folder Include="Functions\" />
+    <Folder Include="wwwroot\static\" />
   </ItemGroup>
   
   <Import Project="PostDeployScripts\IncludeSources.targets" Condition="Exists('PostDeployScripts\IncludeSources.targets')" />

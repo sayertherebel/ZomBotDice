@@ -233,13 +233,25 @@ namespace ZomBotDice.Models
 
             var game = gameStates.Where(x => x.GameID.Equals(gameid)).FirstOrDefault();
 
-            foreach (PlayerState player in game.PlayerStates)
+            foreach (PlayerState player in game.PlayerStates.Where(x=>x.id != game.CurrentPlayer.id))
             {
-                await DoNotify(player.cref, MessageFactory.Text("The game begins.."));
+                await DoNotify(player.cref, MessageFactory.Text($"The game begins.. {game.CurrentPlayer.displayName} goes first.."));
             }
 
             game.Started = true;
-            await DoNotify(game.CurrentPlayer.cref, MessageFactory.Text("It's your turn. Roll damnit!"));
+            
+            var card = new HeroCard
+            {
+                Text = "It's your turn, roll damnit!",
+                Buttons = new List<CardAction>
+                {
+                    new CardAction(ActionTypes.ImBack, title: "Roll", value: "Roll")                        
+                },
+            };
+
+            var rollPrompt = MessageFactory.Attachment(card.ToAttachment());
+
+            await DoNotify(game.CurrentPlayer.cref, rollPrompt);
 
         }
 
@@ -251,9 +263,35 @@ namespace ZomBotDice.Models
             if (!game.IsAbdandoned)
             {
 
-                RollResult result = game.Round.Roll();
+                RoundResult result = game.Round.Roll();
                 result.brainsBanked = game.CurrentPlayer.score;
                 result.playerdisplayname = game.CurrentPlayer.displayName;
+
+                if((result.dice.Where(x=>x.rolledState == DiceSide.Brain).Count() == 3))
+                {
+                    //All brainz
+
+                    var allBrainzReply = MessageFactory.Attachment(new List<Attachment>());
+
+                    Attachment brainsAttachment = new Attachment
+                    {
+                        Name = "brainz gif",
+                        ContentType = "image/*",
+                        ContentUrl = "https://media.giphy.com/media/l41m04gr7tRet7Uas/giphy.gif",
+                    };
+
+
+
+                    allBrainzReply.Attachments = new List<Attachment>() { brainsAttachment };
+
+                    foreach (PlayerState player in game.PlayerStates)
+                    {
+                        await DoNotify(player.cref, allBrainzReply);
+                    }
+                }
+
+
+
 
                 AdaptiveCard resultCard = await AdaptiveCardBuilders.FromResult(result);
 
@@ -273,10 +311,40 @@ namespace ZomBotDice.Models
 
                 if (!result.isDead)
                 {
-                    await DoNotify(game.CurrentPlayer.cref, MessageFactory.Text("It's your turn. roll or stick?"));
+
+                    var card = new HeroCard
+                    {
+                        Text = "It's your turn, roll or stick?",
+                        Buttons = new List<CardAction>
+                        {
+                            new CardAction(ActionTypes.ImBack, title: "Roll", value: "Roll"),
+                            new CardAction(ActionTypes.ImBack, title: "Stick", value: "Stick"),
+                        },
+                    };
+
+                    var rollPrompt = MessageFactory.Attachment(card.ToAttachment());
+
+                    await DoNotify(game.CurrentPlayer.cref, rollPrompt);
                 }
                 else
                 {
+
+                    var deathReply = MessageFactory.Attachment(new List<Attachment>());
+
+                    Attachment death = new Attachment
+                    {
+                        Name = "brainz gif",
+                        ContentType = "image/*",
+                        ContentUrl = "https://media.giphy.com/media/3o6ZsYufWKfdhbVs8o/giphy.gif",
+                    };
+
+
+
+                    deathReply.Attachments = new List<Attachment>() { death };
+
+                    await DoNotify(game.CurrentPlayer.cref, deathReply);
+
+
                     await DoNotify(game.CurrentPlayer.cref, MessageFactory.Text("Bang, you're dead! "));
 
                     foreach (PlayerState player in game.PlayerStates.Where(x => x.id != game.CurrentPlayer.id))
@@ -292,7 +360,18 @@ namespace ZomBotDice.Models
                     }
                     else
                     {
-                        await DoNotify(game.CurrentPlayer.cref, MessageFactory.Text("It's your turn. Roll damnit! "));
+                        //await DoNotify(game.CurrentPlayer.cref, MessageFactory.Text("It's your turn. Roll damnit! "));
+                        var card = new HeroCard
+                        {
+                            Text = "It's your turn, roll damnit!",
+                            Buttons = new List<CardAction>
+                        {
+                            new CardAction(ActionTypes.ImBack, title: "Roll", value: "Roll")                        },
+                        };
+
+                        var rollPrompt = MessageFactory.Attachment(card.ToAttachment());
+
+                        await DoNotify(game.CurrentPlayer.cref, rollPrompt);
                     }
 
 
@@ -341,7 +420,17 @@ namespace ZomBotDice.Models
             }
             else
             {
-                await DoNotify(game.CurrentPlayer.cref, MessageFactory.Text("It's your turn. Roll damnit! "));
+                var card = new HeroCard
+                {
+                    Text = "It's your turn, roll damnit!",
+                    Buttons = new List<CardAction>
+                        {
+                            new CardAction(ActionTypes.ImBack, title: "Roll", value: "Roll")                        },
+                };
+
+                var rollPrompt = MessageFactory.Attachment(card.ToAttachment());
+
+                await DoNotify(game.CurrentPlayer.cref, rollPrompt);
             }
 
 

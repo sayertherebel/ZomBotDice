@@ -59,7 +59,7 @@ namespace ZomBotDice.Dialogs
         private async Task<DialogTurnResult> PromptNameStep(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
 
-            var prompt = MessageFactory.Text("What's your player name?");
+            var prompt = MessageFactory.Text("What's your player name? (Or say Cancel)");
                 var retryPromot = MessageFactory.Text("Please try again.");
                 return await stepContext.PromptAsync("nameprompt", new PromptOptions { Prompt = prompt, RetryPrompt = retryPromot }, cancellationToken);
 
@@ -72,68 +72,28 @@ namespace ZomBotDice.Dialogs
             var userProfile = await userStateAccessors.GetAsync(stepContext.Context, () => new UserProfile());
 
             string GameId = await GameHandler.NewGame(stepContext.Context.Activity.GetConversationReference(), stepContext.Result.ToString());
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"New game with id [{GameId}] has begun :-)", null, InputHints.IgnoringInput), cancellationToken);
-            userProfile.gameid = GameId; 
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"New game with id {GameId} has been created 😎. Other players can now join, when you're ready to start say 'begin game.'", null, InputHints.IgnoringInput), cancellationToken);
             
+            userProfile.gameid = GameId;
+
+            var card = new HeroCard
+            {
+                Text = "When all the players have joined, begin the game.",
+                Buttons = new List<CardAction>
+                {
+                    new CardAction(ActionTypes.ImBack, title: "Begin", value: "Begin")
+                },
+            };
+
+            var rollPrompt = MessageFactory.Attachment(card.ToAttachment());
+
+            await stepContext.Context.SendActivityAsync(rollPrompt);
+
             return await ResetHelper.Reset(stepContext);
 
         }
 
 
-
-        //private async Task<DialogTurnResult> ShowIncidentStep2(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        //{
-
-        //    // TODO when MS get their finger out and fix AdaptiveCards data bindings
-
-        //    var incident = stepContext.Context.TurnState["incidentid"].ToString();
-
-        //    var vmIncident = await Functions.GetIncident(incident.ToUpper());
-
-        //    if (vmIncident == null || vmIncident.id == "")
-        //    {
-        //        var reply = MessageFactory.Text("Sorry, I didn't find a ticket with that IR reference 🤷‍♂️");
-        //        await stepContext.Context.SendWithRetry(reply, cancellationToken);
-        //    }
-        //    else
-        //    {
-
-        //        var cardResourcePath = "ZomBotDice.Cards.incidentcard.json";
-
-        //        using (var stream = GetType().Assembly.GetManifestResourceStream(cardResourcePath))
-        //        {
-        //            using (var reader = new StreamReader(stream))
-        //            {
-        //                var adaptiveCardJson = reader.ReadToEnd();
-
-        //                var cleanedDesc = JsonConvert.ToString(vmIncident.description);
-
-        //                adaptiveCardJson = adaptiveCardJson.Replace("{incident.description}", cleanedDesc);
-
-        //                var card = AdaptiveCard.FromJson(adaptiveCardJson).Card;
-
-        //                Attachment attachment = new Attachment()
-        //                {
-        //                    ContentType = AdaptiveCard.ContentType,
-        //                    Content = card
-        //                };
-
-        //                // Pop the last note onto the waterfall context for the next step
-
-        //                stepContext.Values["lastnote"] = vmIncident.lastnote;
-
-
-        //                var reply = MessageFactory.Attachment(new List<Attachment>() { attachment });
-
-        //                await stepContext.Context.SendWithRetry(reply, cancellationToken);
-        //            }
-        //        }
-
-        //    }
-
-        //    return await ResetHelper.Reset(stepContext);
-
-        //}
 
 
 

@@ -71,6 +71,7 @@ namespace ZomBotDice.Models
         ZombieDice[] diceInHand;
         public int brainsWon { get; set; }
         int shotgunsWon;
+        public bool brainDiceRecycled { get; set; }
 
         public ZombieRound()
         {
@@ -84,8 +85,18 @@ namespace ZomBotDice.Models
             playedDice = new List<ZombieDice>();
         }
 
-        private ZombieDice takeOne()
+        private ZombieDice TakeOne()
         {
+            if(diceInTub.Count == 0)
+            {
+                //Recycle ze brains
+
+                foreach (ZombieDice dice in diceInHand.Where(x=>x.rolledState == DiceSide.Brain)) // Take Rolled Brains
+                {
+                    diceInTub.Add(dice); // Put them back in the tub
+                }
+            }
+
             Random random = new Random();
             int randomIndex = random.Next(1, diceInTub.Count+1);
             ZombieDice selected = diceInTub[randomIndex-1];
@@ -93,13 +104,13 @@ namespace ZomBotDice.Models
             return selected;
         }
 
-        public RollResult Roll()
+        public RoundResult Roll()
         {
-            RollResult result = new RollResult();
+            RoundResult result = new RoundResult();
 
             for (int i = 0; i < 3; i++ )
             {
-                if(diceInHand[i] == null) { diceInHand[i] = takeOne(); }
+                if(diceInHand[i] == null) { diceInHand[i] = TakeOne(); }
                 diceInHand[i].Roll();
                 result.dice[i] = diceInHand[i];
                 if(diceInHand[i].rolledState != DiceSide.Runner)
@@ -137,7 +148,7 @@ namespace ZomBotDice.Models
 
     }
 
-    public class RollResult
+    public class RoundResult
     {
         public ZombieDice[] dice { get; set; }
         public bool isDead{ get; set; }
@@ -145,7 +156,7 @@ namespace ZomBotDice.Models
         public int shotguns { get; set; }
 
         public string playerdisplayname { get; set; }
-        public RollResult()
+        public RoundResult()
         {
             dice = new ZombieDice[3];
         }

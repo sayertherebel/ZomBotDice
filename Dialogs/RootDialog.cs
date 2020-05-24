@@ -95,11 +95,7 @@ namespace ZomBotDice.Dialogs
             {
                 case ZombieIntents.Intent.New_Game:
                     return await stepContext.BeginDialogAsync("new-game", luisResult, cancellationToken);
-                    string GameId = await GameHandler.NewGame(stepContext.Context.Activity.GetConversationReference(), user);
-                    var subscribersMessage = MessageFactory.Text($"Game id {GameId} has begun :-)", null, InputHints.IgnoringInput);
-                    await stepContext.Context.SendWithRetry(subscribersMessage, cancellationToken);                                
-                    userProfile.gameid = GameId;
-                    break;
+
                 case ZombieIntents.Intent.Debug:                  
                                 
                     var subscribersMessage2 = MessageFactory.Text($"User joined to {userProfile.gameid} ", null, InputHints.IgnoringInput);
@@ -139,7 +135,6 @@ namespace ZomBotDice.Dialogs
                         var GameState = GameHandler.GetGameById(userProfile.gameid);
                         if (GameState.IsCurrentPlayer(stepContext.Context.Activity.GetConversationReference()))
                         {
-                            await stepContext.Context.SendWithRetry(MessageFactory.Text("Let's do this thing!"), cancellationToken);
                             await GameHandler.Roll(GameState.GameID);
                         }
                         else
@@ -202,8 +197,6 @@ namespace ZomBotDice.Dialogs
                     if (!String.IsNullOrEmpty(userProfile.gameid))
                     {
                         var GameState = GameHandler.GetGameById(userProfile.gameid);
-
-                        //string scoresList = GameState.PlayerStates.Select(x=>x).Aggregate((s1, s2) => s1.displayName + " has " + s1.score + ", " + s2.displayName + " has " + s2.score);
 
                         string scoresList = "";
 
