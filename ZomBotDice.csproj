@@ -36,15 +36,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Cards\incidentcard.json" />
     <Content Remove="Cards\zombiecard.json" />
     <Content Remove="Cards\zombietitle.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Cards\incidentcard.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
     <EmbeddedResource Include="Cards\zombietitle.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

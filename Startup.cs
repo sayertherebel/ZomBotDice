@@ -40,13 +40,13 @@ namespace ScribeBotV4
             services.AddSingleton<IMiddleware, ScribeBotMiddleware>();
             
 
-            services.AddTransient<IAuthorizationHandler, ApiKeyRequirementHandler>();
-            services.AddAuthorization(authConfig =>
-            {
-                authConfig.AddPolicy("ApiKeyPolicy",
-                    policyBuilder => policyBuilder
-                        .AddRequirements(new ApiKeyRequirement(new[] { "28c11593-0f54-49ca-93c5-c6ee63bc9147" })));
-            });
+            //services.AddTransient<IAuthorizationHandler, ApiKeyRequirementHandler>();
+            //services.AddAuthorization(authConfig =>
+            //{
+            //    authConfig.AddPolicy("ApiKeyPolicy",
+            //        policyBuilder => policyBuilder
+            //            .AddRequirements(new ApiKeyRequirement(new[] { "28c11593-0f54-49ca-93c5-c6ee63bc9147" })));
+            //});
             // Create a global hashset for our ConversationReferences
             services.AddSingleton<ConcurrentDictionary<string, ConversationReference>>();
 

@@ -3,7 +3,7 @@
   "body": [
     {
       "type": "Image",
-      "url": "https://www.jamiesayer.co.uk/static/images/zombie/zombotlogo.png"
+      "url": "http://zombotdice.azurewebsites.net/static/zombotlogo.png"
     }
   ],
   "actions": [

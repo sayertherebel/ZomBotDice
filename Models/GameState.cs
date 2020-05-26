@@ -338,8 +338,6 @@ namespace ZomBotDice.Models
                         ContentUrl = "https://media.giphy.com/media/3o6ZsYufWKfdhbVs8o/giphy.gif",
                     };
 
-
-
                     deathReply.Attachments = new List<Attachment>() { death };
 
                     await DoNotify(game.CurrentPlayer.cref, deathReply);
@@ -349,7 +347,7 @@ namespace ZomBotDice.Models
 
                     foreach (PlayerState player in game.PlayerStates.Where(x => x.id != game.CurrentPlayer.id))
                     {
-                        await DoNotify(player.cref, MessageFactory.Text($"{player.displayName} died."));
+                        await DoNotify(player.cref, MessageFactory.Text($"{game.CurrentPlayer.displayName} died."));
                     }
 
                     game.NextPlayer();
@@ -360,7 +358,12 @@ namespace ZomBotDice.Models
                     }
                     else
                     {
-                        //await DoNotify(game.CurrentPlayer.cref, MessageFactory.Text("It's your turn. Roll damnit! "));
+
+                        foreach (PlayerState player in game.PlayerStates.Where(x => x.id != game.CurrentPlayer.id))
+                        {
+                            await DoNotify(player.cref, MessageFactory.Text($"{game.CurrentPlayer.displayName} is up."));
+                        }
+
                         var card = new HeroCard
                         {
                             Text = "It's your turn, roll damnit!",
@@ -420,6 +423,11 @@ namespace ZomBotDice.Models
             }
             else
             {
+                foreach (PlayerState player in game.PlayerStates.Where(x => x.id != game.CurrentPlayer.id))
+                {
+                    await DoNotify(player.cref, MessageFactory.Text($"{game.CurrentPlayer.displayName} is up."));
+                }
+
                 var card = new HeroCard
                 {
                     Text = "It's your turn, roll damnit!",
